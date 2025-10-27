@@ -3,6 +3,10 @@ Telegram chat clustering functionality based on embeddings
 
 <img src="https://github.com/user-attachments/assets/806c77d1-4d67-4605-8f30-bd249eeca127" width=50% height=50%>
 
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Language](https://img.shields.io/badge/language-Python-00ADD8)
+
+
 ## How to start
 1. Install the dependencies
 ```bash
