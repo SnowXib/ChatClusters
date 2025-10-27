@@ -1,5 +1,6 @@
 import pandas as pd
 import ast
+import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA, FastICA
 from sklearn.manifold import TSNE, MDS
@@ -7,11 +8,39 @@ from umap import UMAP
 import plotly.express as px
 from tqdm import tqdm
 
+def safe_convert_embedding(embedding_str):
+    try:
+        if isinstance(embedding_str, list):
+            return embedding_str
+        
+        if isinstance(embedding_str, str):
+            cleaned_str = embedding_str.strip()
+            if cleaned_str.startswith('[') and cleaned_str.endswith(']'):
+                return ast.literal_eval(cleaned_str)
+        
+        return None
+    except (ValueError, SyntaxError):
+        try:
+            if isinstance(embedding_str, str):
+                cleaned = embedding_str.replace('[', '').replace(']', '').strip()
+                return [float(x.strip()) for x in cleaned.split(',') if x.strip()]
+        except:
+            return None
+        return None
+
 def clustering(df, input_algoritm, info_row, count_clusters=5):
     progress_bar = tqdm(total=100, desc="Clustering progress")
     
-    df['embedding'] = df['embedding'].apply(ast.literal_eval)
+    df['embedding'] = df['embedding'].apply(safe_convert_embedding)
     progress_bar.update(10)
+    
+    df = df.dropna(subset=['embedding'])
+    
+    embedding_lengths = df['embedding'].apply(len)
+    if embedding_lengths.nunique() > 1:
+        print(f"Предупреждение: эмбеддинги разной длины: {embedding_lengths.unique()}")
+        most_common_length = embedding_lengths.mode()[0]
+        df = df[df['embedding'].apply(len) == most_common_length]
     
     embeddings = pd.DataFrame(df['embedding'].tolist())
     progress_bar.update(10)
@@ -37,11 +66,10 @@ def clustering(df, input_algoritm, info_row, count_clusters=5):
     result_df = pd.DataFrame(data=reduced_embeddings, columns=['x', 'y'])
     progress_bar.update(10)
     
-    result_df[info_row] = df[info_row]
-    result_df['cluster'] = df['cluster']
+    result_df[info_row] = df[info_row].values
+    result_df['cluster'] = df['cluster'].values
     progress_bar.update(10)
     
-    # Научная нейтральная цветовая палитра
     scientific_palette = [
         '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
         '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
