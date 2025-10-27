@@ -1,10 +1,19 @@
 # ChatClusters
 Telegram chat clustering functionality based on embeddings
 
+![ICA](https://img.shields.io/badge/ICA-1E90FF)
+![MDS](https://img.shields.io/badge/MDS-32CD32)
+![PCA](https://img.shields.io/badge/PCA-FFA500)
+![tSNE](https://img.shields.io/badge/tSNE-9370DB)
+![UMAP](https://img.shields.io/badge/UMAP-DC143C)
+
+
 <img src="https://github.com/user-attachments/assets/806c77d1-4d67-4605-8f30-bd249eeca127" width=50% height=50%>
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![Language](https://img.shields.io/badge/Python-3.13-00ADD8)
+
+
 
 
 ## How to start
